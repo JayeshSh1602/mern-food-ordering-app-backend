@@ -1,8 +1,8 @@
-const express = require("express");
-const multer = require("multer");
-const MyRestaurantController = require("../controllers/MyRestaurantController");
-const { jwtCheck, jwtParse } = require("../middleware/auth");
-const { validateMyRestaurantRequest } = require("../middleware/validation");
+import express from "express";
+import multer from "multer";
+import MyRestaurantController from "../controllers/MyRestaurantController.js";
+import { jwtCheck, jwtParse } from "../middleware/auth.js";
+import { validateMyRestaurantRequest } from "../middleware/validation.js";
 
 const router = express.Router();
 
@@ -48,4 +48,5 @@ router.put(
   MyRestaurantController.updateMyRestaurant
 );
 
-module.exports = router;
+
+export default router;

@@ -11,8 +11,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import myUserRoute from "./routes/MyUserRoutes.js";
 import myRestaurantRoute from "./routes/MyRestaurantRoute.js";
-// import restaurantRoute from "./routes/RestaurantRoute.js";
-// import orderRoute from "./routes/OrderRoute.js";
+import restaurantRoute from "./routes/RestaurantRoute.js";
+import orderRoute from "./routes/OrderRoute.js";
 
 mongoose
   .connect(process.env.MONGODB_CONNECTION_STRING)
@@ -30,6 +30,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+
 app.use(express.json());
 
 app.get("/health", async (req, res) => {
@@ -38,8 +41,8 @@ app.get("/health", async (req, res) => {
 
 app.use("/api/my/user", myUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
-// app.use("/api/restaurant", restaurantRoute);
-// app.use("/api/order", orderRoute);
+app.use("/api/restaurant", restaurantRoute);
+app.use("/api/order", orderRoute);
 
 app.listen(PORT, () => {
   console.log(`server started on localhost:${PORT}`);

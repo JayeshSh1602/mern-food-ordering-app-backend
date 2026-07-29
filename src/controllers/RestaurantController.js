@@ -19,7 +19,7 @@ const getRestaurant = async (req, res) => {
 const searchRestaurant = async (req, res) => {
   try {
     const city = req.params.city;
-    const searchQuery = req.params.searchQuery || "";
+    const searchQuery = req.query.searchQuery || "";
     const selectedCuisines = req.query.selectedCuisines || "";
     const sortOption = req.query.sortOption || "lastUpdated";
     const page = parseInt(req.query.page) || 1;
@@ -39,12 +39,18 @@ const searchRestaurant = async (req, res) => {
       });
     }
 
-    if (selectedCuisines) {
-      const cuisineArray = selectedCuisines.split(",").map((cuisine) => new RegExp(cuisine, "i"));
-    }
+   if (selectedCuisines) {
+    const cuisineArray = selectedCuisines
+        .split(",")
+        .map((cuisine) => new RegExp(cuisine, "i"));
+
+    query["cuisines"] = {
+        $all: cuisineArray,
+    };
+}
 
     if (searchQuery) {
-      const searchRegex = new RegExp(cuisine, "i");
+      const searchRegex = new RegExp(searchQuery, "i");
       query["$or"] = [
         { restaurantName: searchRegex },
         { cuisines: { $in: [searchRegex] } },
@@ -52,7 +58,7 @@ const searchRestaurant = async (req, res) => {
     }
 
     const pageSize = 10;
-    const skip = (pageSize - 1) * pageSize
+    const skip = (page - 1) * pageSize;
 
     const restaurants = await Restaurant.find(query)
       .sort({ [sortOption]: 1 })

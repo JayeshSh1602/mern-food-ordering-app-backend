@@ -120,7 +120,7 @@ const createSession = async (
     orderId,
     deliveryPrice,
     restaurantId) => {
-    const sessionData = await STRIPE.checkout.session.create({
+    const sessionData = await STRIPE.checkout.sessions.create({
         line_items: lineItems,
         shipping_options: [
             {

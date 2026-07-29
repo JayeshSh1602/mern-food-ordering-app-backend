@@ -16,16 +16,26 @@ const getCurrentUser = async (req, res) => {
 const createCurrentUser = async (req, res) => {
     try {
         const { auth0Id } = req.body;
+
         const existingUser = await User.findOne({ auth0Id });
+
         if (existingUser) {
             return res.status(200).send();
         }
+
         const newUser = new User(req.body);
         await newUser.save();
+
         res.status(201).json(newUser.toObject());
+
     } catch (error) {
-        console.error("Error in createCurrentUser:", error);
-        res.status(500).json({ message: "Error creating user" });
+        console.error("========== CREATE USER ERROR ==========");
+        console.error(error);
+        console.error(error.stack);
+
+        res.status(500).json({
+            message: error.message,
+        });
     }
 };
 
